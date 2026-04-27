@@ -3,10 +3,11 @@ name: Build and Push helloworld Image
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 0 * * *"
 
 env:
-  IMAGE_NAME: ghcr.io/helloworld
+  IMAGE_NAME: helloworld
+  IMAGE_FULL_NAME: ghcr.io/ngvito/helloworld
 
 jobs:
   build:
@@ -36,7 +37,7 @@ jobs:
       - name: Check if image exists
         id: check_image
         run: |
-          if docker manifest inspect $IMAGE_NAME:${{ steps.get_version.outputs.version }} > /dev/null 2>&1; then
+          if docker manifest inspect $IMAGE_FULL_NAME:${{ steps.get_version.outputs.version }} > /dev/null 2>&1; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -52,7 +53,7 @@ jobs:
         if: steps.check_image.outputs.exists != 'true'
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./hellworld/
           push: true
 
           # 多架构
@@ -60,13 +61,13 @@ jobs:
 
           # 镜像 tag
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.version }}
-            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_FULL_NAME }}:${{ steps.get_version.outputs.version }}
+            ${{ env.IMAGE_FULL_NAME }}:latest
 
           # 传递版本给 Dockerfile
           build-args: |
             NAIVE_VERSION=${{ steps.get_version.outputs.version }}
 
           # ✅ registry cache（关键优化）
-          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.IMAGE_FULL_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.IMAGE_FULL_NAME }}:buildcache,mode=max
