@@ -9,6 +9,7 @@ on:
 env:
   IMAGE_NAME: helloworld
   IMAGE_FULL_NAME: ghcr.io/ngwind/helloworld
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
