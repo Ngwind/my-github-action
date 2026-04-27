@@ -9,6 +9,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ARG NAIVE_VERSION
+ARG TARGETARCH
 # 下载编译好的文件
 RUN set -eux; \
     case "$TARGETARCH" in \
