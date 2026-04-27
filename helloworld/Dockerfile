@@ -14,11 +14,10 @@ RUN set -eux; \
     case "$TARGETARCH" in \
       amd64) ARCH="x64" ;; \
       arm64) ARCH="arm64" ;; \
-      *) echo "Unsupported arch: $TARGETARCH" && exit 1 ;; \
+      *) exit 1 ;; \
     esac; \
-    URL=$(curl -s "https://api.github.com/repos/klzgrad/naiveproxy/releases/tags/${NAIVE_VERSION}" \
-      | jq -r ".assets[] | select(.name | test(\"^naiveproxy-.*-linux-${ARCH}\\\\..*\")) | .browser_download_url") ; \
-    curl -L -o naiveproxy.tar.xz "$URL"; \
+    curl -L -o naiveproxy.tar.xz \
+    "https://github.com/klzgrad/naiveproxy/releases/download/${NAIVE_VERSION}/naiveproxy-${NAIVE_VERSION}-linux-${ARCH}.tar.xz"; \
     tar -xvf naiveproxy.tar.xz; \
     rm -f naiveproxy.tar.xz; \
     mv naiveproxy-*-linux-${ARCH} /app
