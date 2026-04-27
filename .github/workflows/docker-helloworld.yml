@@ -1,4 +1,4 @@
-name: Build and Push NaiveProxy Image
+name: Build and Push helloworld Image
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     - cron: "0 */6 * * *"
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  IMAGE_NAME: ghcr.io/helloworld
 
 jobs:
   build:
