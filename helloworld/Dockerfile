@@ -10,11 +10,16 @@ RUN apt-get update \
 
 ARG NAIVE_VERSION
 # 下载编译好的文件
-RUN curl -L -o naiveproxy.tar.xz "$(curl -s https://api.github.com/repos/klzgrad/naiveproxy/releases/tags/${NAIVE_VERSION} \
-| jq -r '.assets[] | select(.name | test("^naiveproxy-.*-linux-x64\\..*")) | .browser_download_url')" \
+RUN case "$TARGETARCH" in \
+      amd64) ARCH="x64" ;; \
+      arm64) ARCH="arm64" ;; \
+      *) echo "Unsupported arch: $TARGETARCH" && exit 1 ;; \
+    esac && \
+    curl -L -o naiveproxy.tar.xz "$(curl -s https://api.github.com/repos/klzgrad/naiveproxy/releases/tags/${NAIVE_VERSION} \
+    | jq -r '.assets[] | select(.name | test("^naiveproxy-.*-linux-x64\\..*")) | .browser_download_url')" \
     && tar -xvf naiveproxy.tar.xz \
     && rm -f naiveproxy.tar.xz \
-    && mv naiveproxy-*-linux-x64 /app
+    && mv naiveproxy-*-linux-${ARCH} /app
 
 RUN chmod +x /app/naive
 
