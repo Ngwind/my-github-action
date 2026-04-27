@@ -16,6 +16,7 @@ RUN set -eux; \
       arm64) ARCH="arm64" ;; \
       *) exit 1 ;; \
     esac; \
+    echo "https://github.com/klzgrad/naiveproxy/releases/download/${NAIVE_VERSION}/naiveproxy-${NAIVE_VERSION}-linux-${ARCH}.tar.xz"; \
     curl -L -o naiveproxy.tar.xz \
     "https://github.com/klzgrad/naiveproxy/releases/download/${NAIVE_VERSION}/naiveproxy-${NAIVE_VERSION}-linux-${ARCH}.tar.xz"; \
     tar -xvf naiveproxy.tar.xz; \
